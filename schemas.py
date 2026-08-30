@@ -103,3 +103,51 @@ CONQUER_MARKET_SEARCH = {
         "required": [],
     },
 }
+
+# -- Local client-data catalog lookup ---------------------------------------
+CONQUER_GAME_DATA_SEARCH = {
+    "name": "conquer_game_data_search",
+    "description": (
+        "Read-only lookup against the local, version-pinned Conquer client data "
+        "catalog (itemtype.json, monster.json, magictype.json) materialized at "
+        "import time into a local SQLite database. Use this to resolve an item, "
+        "monster, or magic name to its client ID, or to inspect static "
+        "client-side definition fields. This is reference data only: it is NOT "
+        "proof of live server availability, drop rates, enabled content, or "
+        "server-authoritative mechanics. For current listings and prices, use "
+        "conquer_market_search separately."
+    ),
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "resource": {
+                "type": "string",
+                "enum": ["item", "monster", "magic"],
+                "description": (
+                    "Catalog entity to search: item (itemtype), monster, or "
+                    "magic (magictype)."
+                ),
+            },
+            "query": {
+                "type": "string",
+                "description": (
+                    "Case-insensitive substring to match against the entity's "
+                    "display name. Required unless 'id' is supplied."
+                ),
+            },
+            "id": {
+                "type": ["integer", "null"],
+                "description": (
+                    "Exact numeric client ID: item.id, monster.type, or "
+                    "magic.magic_type. Required unless 'query' is supplied."
+                ),
+            },
+            "limit": {
+                "type": "integer",
+                "description": "Maximum results to return (1-50, default 20).",
+                "default": 20,
+            },
+        },
+        "required": ["resource"],
+    },
+}

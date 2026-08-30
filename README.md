@@ -1,6 +1,11 @@
 # conquer-market
 
-A Hermes plugin providing read-only access to the public Conquer Online Classic market API.
+A Hermes plugin providing two read-only tools for Conquer Online Classic theorycrafting:
+
+1. `conquer_market_search` — live market listings via the public API.
+2. `conquer_game_data_search` — local, version-pinned client reference data (item definitions, monster stats, and magic/skill definitions) materialized into a read-only SQLite catalog.
+
+Neither tool buys items, submits listings, authenticates as a player, scrapes browser pages, or makes any state-changing request.
 
 ## What it does
 
@@ -46,8 +51,6 @@ Invalid enum values, out-of-range integers, or non-integer types return structur
 
 Errors return `ok: false` with an `error` object containing `type`, `message`, and optionally `body_preview`.
 
-## Installation / discovery path
-
 This is a **local Hermes plugin** installed at:
 
 ```
@@ -62,11 +65,17 @@ File layout:
 ├── __init__.py
 ├── schemas.py
 ├── tools.py
+├── importer.py
 ├── README.md
 └── skills/
     └── conquer-market-search/
         └── SKILL.md
 ```
+
+After enabling, both tools appear under the `conquer_market` toolset
+(`conquer_market_search` with emoji 🛒, `conquer_game_data_search` with emoji
+📜). The companion skill is accessible via
+`skill_view(name='conquer-market:conquer-market-search')`.
 
 ## How to enable and verify
 
@@ -97,3 +106,117 @@ After enabling, the tool appears as `conquer_market_search` under the `conquer_m
 - **Read-only only.** This plugin does not support purchasing, listing, or any state-changing operation.
 - **Zero returned listings does not mean global nonexistence.** An empty `items` array only means no listings matched the given filters on the given server.
 - **API rate limits and terms of service should be respected.** One HTTP request per tool call with a 15-second timeout. A single retry is performed for transient network errors only.
+
+---
+
+## 2. Local client-data catalog — `conquer_game_data_search`
+
+A second read-only tool queries a **local, version-pinned** SQLite catalog built from the client reference files `itemtype.json`, `monster.json`, and `magictype.json`. These files are reference data only — they describe how the client identifies items/monsters/magic and are **not** proof of live server mechanics, drop rates, availability, enabled content, or server-authoritative formulas.
+
+### Directory layout
+
+This is a **profile-scoped Hermes plugin**. The Hermes convention resolves plugin-owned data to `<profile>/plugin-data/<plugin-id>/`:
+
+```
+~/.hermes/profiles/conquer/
+├── plugins/conquer-market/        # the plugin package (git-tracked)
+│   ├── __init__.py
+│   ├── schemas.py
+│   ├── tools.py
+│   ├── importer.py                # one-time, stdlib-only SQLite importer
+│   ├── plugin.yaml
+│   └── skills/conquer-market-search/SKILL.md
+└── plugin-data/conquer-market/    # runtime data (NOT git-tracked)
+    ├── source/                    # raw reference JSON (read-only, never modified by importer)
+    │   ├── itemtype.json
+    │   ├── monster.json
+    │   └── magictype.json
+    ├── catalog/
+    │   └── conquer_client_catalog.sqlite3
+    └── manifests/
+        └── import-manifest.json
+```
+
+### Building the catalog
+
+The catalog is built by running the importer (standard library only — `json`, `hashlib`, `sqlite3`):
+
+```bash
+cd ~/.hermes/profiles/conquer/plugins/conquer-market
+python3 importer.py            # build or verify
+python3 importer.py --force    # rebuild even if sources unchanged
+```
+
+Behaviour:
+* Idempotent: reruns are no-ops when the three source SHA-256 hashes are unchanged.
+* Stale detection: if the sources changed since the last build, `import_catalog(force=False)` **refuses** to run and returns `ok: false, error.type: "stale_source"`. Use `--force` (or `force=True` from code) to rebuild.
+* The catalog version is the concatenation `sha256(itemtype)|sha256(monster)|sha256(magictype)`, so any change to the raw data automatically invalidates cached catalogs.
+* Invalid records are skipped and reported, not fatal.
+* Raw source files are never modified.
+
+### Tool parameters
+
+```json
+{
+  "resource": "item | monster | magic",
+  "query": "string (case-insensitive substring on name) — required unless id given",
+  "id": 12345,
+  "limit": 20
+}
+```
+
+* `resource` is an enum: `item`, `monster`, or `magic`.
+* At least one of `query` or `id` is required.
+* `id` is the exact numeric client ID: `item.id`, `monster.type`, or `magic.magic_type` (magic matches all levels because `magic` rows are keyed by the composite `(magic_type, level)`).
+* `limit` defaults to 20 and is clamped to 1–50.
+
+### Success shape
+
+```json
+{
+  "ok": true,
+  "source_type": "local_client_catalog",
+  "catalog_version": "<sha256|sha256|sha256>",
+  "catalog_metadata": {
+    "source_type": "local_client_catalog",
+    "catalog_version": "...",
+    "importer_version": "conquer-market-importer-v1",
+    "imported_at_utc": "2026-08-30T18:53:49Z",
+    "record_counts": { "item": 11142, "monster": 374, "magic": 610 },
+    "sources": {
+      "item":    { "sha256": "...", "size": 8308073, "records": 11142 },
+      "monster": { "sha256": "...", "size": 110420,  "records": 374 },
+      "magic":   { "sha256": "...", "size": 591313,  "records": 610 }
+    },
+    "present": true
+  },
+  "resource": "item",
+  "query": null,
+  "id": 111303,
+  "count": 1,
+  "limit": 20,
+  "results": [ { "id": 111303, "name": "IronHelmet", "required_level": 15, ... } ]
+}
+```
+
+### Error shape
+
+```json
+{
+  "ok": false,
+  "source_type": "local_client_catalog",
+  "catalog_version": "...",
+  "catalog_metadata": { ... },
+  "error": { "type": "validation_error", "message": "A query or id is required." }
+}
+```
+
+Error types: `validation_error`, `catalog_unavailable`, `catalog_error`, `stale_source`, `missing_source`.
+
+### Known limitations
+
+- **Data is version-specific client reference data.** The exact client build that produced these files is not recorded inside the files; the catalog version is derived from their SHA-256 hashes instead.
+- **Duplicate / variant rows are preserved.** Item names like `IronHelmet` map to many consecutive IDs (reinforcement / +level variants). `MagicType` rows repeat across `Level` 0–9, and some magic names map to multiple distinct `MagicType` IDs. Search returns the underlying records; treat the ID as the authoritative key.
+- **`description`/`Disc` fields carry quality cues only loosely.** `itemtype.description == "Fixed"` is a coarse quality marker; `magictype.Disc` holds upgrade-tier strings. These are not a normalized quality system.
+- **No server-state claims.** An item existing in `itemtype.json` does **not** mean it is currently listed, tradeable, droppable, or enabled on any specific private server. Cross-check with `conquer_market_search` for live listings.
+

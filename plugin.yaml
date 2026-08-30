@@ -1,6 +1,7 @@
 name: conquer-market
-version: 0.1.0
-description: "Read-only Conquer Online Classic market lookup (public API)."
+version: 0.2.0
+description: "Read-only Conquer Online Classic market lookup plus local client-data catalog."
 kind: standalone
 provides_tools:
   - conquer_market_search
+  - conquer_game_data_search

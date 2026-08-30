@@ -1,11 +1,16 @@
 """conquer-market Hermes plugin.
 
-Registers the ``conquer_market_search`` tool under the ``conquer_market``
-toolset, plus a companion skill ``conquer-market:conquer-market-search``.
+Registers two read-only tools under the ``conquer_market`` toolset, plus a
+companion skill ``conquer-market:conquer-market-search``:
 
-Hermes loads this plugin when enabled (via ``hermes plugins enable conquer-market``).
-The plugin is intentionally minimal: one read-only tool + one skill, no MCP,
-no extra dependencies.
+* ``conquer_market_search`` — queries the public Conquer Online Classic market
+  API for current listings.
+* ``conquer_game_data_search`` — local, read-only SQLite lookup over the client
+  reference files (itemtype.json, monster.json, magictype.json).
+
+Hermes loads this plugin when enabled (via ``hermes plugins enable
+conquer-market``). The plugin is intentionally minimal: two read-only tools
++ one skill, no MCP, no extra dependencies.
 """
 
 from __future__ import annotations
@@ -13,8 +18,8 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from .schemas import CONQUER_MARKET_SEARCH
-from .tools import conquer_market_search
+from .schemas import CONQUER_GAME_DATA_SEARCH, CONQUER_MARKET_SEARCH
+from .tools import conquer_market_search, conquer_game_data_search
 
 
 def register(ctx) -> None:
@@ -25,6 +30,15 @@ def register(ctx) -> None:
         schema=CONQUER_MARKET_SEARCH,
         handler=conquer_market_search,
         emoji="🛒",
+    )
+
+    # Register the read-only local client-data catalog tool.
+    ctx.register_tool(
+        name="conquer_game_data_search",
+        toolset="conquer_market",
+        schema=CONQUER_GAME_DATA_SEARCH,
+        handler=conquer_game_data_search,
+        emoji="📜",
     )
 
     # Register the companion skill so it is resolvable via

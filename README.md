@@ -1,4 +1,4 @@
-# conquer-market
+# conquerMarket
 
 A Hermes plugin providing two read-only tools for Conquer Online Classic theorycrafting:
 
@@ -54,13 +54,13 @@ Errors return `ok: false` with an `error` object containing `type`, `message`, a
 This is a **local Hermes plugin** installed at:
 
 ```
-~/.hermes/plugins/conquer-market/
+~/.hermes/plugins/conquerMarket/
 ```
 
 File layout:
 
 ```
-~/.hermes/plugins/conquer-market/
+~/.hermes/plugins/conquerMarket/
 ├── plugin.yaml
 ├── __init__.py
 ├── schemas.py
@@ -68,30 +68,44 @@ File layout:
 ├── importer.py
 ├── README.md
 └── skills/
-    └── conquer-market-search/
-        └── SKILL.md
+    ├── conquerMarketSearch/
+    │   └── SKILL.md          # live market listing queries & price snapshots
+    ├── conquerGameData/
+    │   └── SKILL.md          # local client-catalog entity lookup guidance
+    └── conquerTheorycraft/
+        └── SKILL.md          # multi-source item/market comparison + evidence hierarchy
 ```
 
 After enabling, both tools appear under the `conquer_market` toolset
 (`conquer_market_search` with emoji 🛒, `conquer_game_data_search` with emoji
-📜). The companion skill is accessible via
-`skill_view(name='conquer-market:conquer-market-search')`.
+📜). Three companion skills are bundled:
+
+- `conquerMarketSearch` — live market listing queries, price snapshots, and
+  use of `conquer_market_search`. Accessible via
+  `skill_view(name='conquerMarket:conquerMarketSearch')`.
+- `conquerGameData` — local client-catalog entity lookup guidance using
+  `conquer_game_data_search`. Accessible via
+  `skill_view(name='conquerMarket:conquerGameData')`.
+- `conquerTheorycraft` — evidence-hierarchical theorycrafting that
+  cross-references the local client catalog, live market data, and official
+  sources. Accessible via
+  `skill_view(name='conquerMarket:conquerTheorycraft')`.
 
 ## How to enable and verify
 
 ```bash
 # Enable the plugin
-hermes plugins enable conquer-market
+hermes plugins enable conquerMarket
 
 # Verify discovery
 hermes plugins list
-hermes plugins show conquer-market
+hermes plugins show conquerMarket
 
 # Run the doctor
-hermes plugins doctor conquer-market
+hermes plugins doctor conquerMarket
 ```
 
-After enabling, the tool appears as `conquer_market_search` under the `conquer_market` toolset. The companion skill is accessible via `skill_view(name='conquer-market:conquer-market-search')`.
+After enabling, the tool appears as `conquer_market_search` under the `conquer_market` toolset. The companion skill is accessible via `skill_view(name='conquerMarket:conquerMarketSearch')`.
 
 ## Test prompts
 
@@ -119,14 +133,14 @@ This is a **profile-scoped Hermes plugin**. The Hermes convention resolves plugi
 
 ```
 ~/.hermes/profiles/conquer/
-├── plugins/conquer-market/        # the plugin package (git-tracked)
+├── plugins/conquerMarket/        # the plugin package (git-tracked)
 │   ├── __init__.py
 │   ├── schemas.py
 │   ├── tools.py
 │   ├── importer.py                # one-time, stdlib-only SQLite importer
 │   ├── plugin.yaml
-│   └── skills/conquer-market-search/SKILL.md
-└── plugin-data/conquer-market/    # runtime data (NOT git-tracked)
+│   └── skills/conquerMarketSearch/SKILL.md
+└── plugin-data/conquerMarket/    # runtime data (NOT git-tracked)
     ├── source/                    # raw reference JSON (read-only, never modified by importer)
     │   ├── itemtype.json
     │   ├── monster.json
@@ -142,7 +156,7 @@ This is a **profile-scoped Hermes plugin**. The Hermes convention resolves plugi
 The catalog is built by running the importer (standard library only — `json`, `hashlib`, `sqlite3`):
 
 ```bash
-cd ~/.hermes/profiles/conquer/plugins/conquer-market
+cd ~/.hermes/profiles/conquer/plugins/conquerMarket
 python3 importer.py            # build or verify
 python3 importer.py --force    # rebuild even if sources unchanged
 ```
@@ -180,7 +194,7 @@ Behaviour:
   "catalog_metadata": {
     "source_type": "local_client_catalog",
     "catalog_version": "...",
-    "importer_version": "conquer-market-importer-v1",
+    "importer_version": "conquerMarket-importer-v1",
     "imported_at_utc": "2026-08-30T18:53:49Z",
     "record_counts": { "item": 11142, "monster": 374, "magic": 610 },
     "sources": {

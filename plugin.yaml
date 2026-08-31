@@ -1,5 +1,5 @@
-name: conquer-market
-version: 0.2.0
+name: conquerMarket
+version: 0.3.0
 description: "Read-only Conquer Online Classic market lookup plus local client-data catalog."
 kind: standalone
 provides_tools:

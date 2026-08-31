@@ -1,4 +1,4 @@
-"""conquer-market plugin tool handlers.
+"""conquerMarket plugin tool handlers.
 
 Read-only Conquer Online Classic market lookup via the public API.
 No authentication, no state-changing requests, no browser automation.
@@ -426,7 +426,9 @@ def conquer_game_data_search(args: dict, **kwargs) -> str:
     results = []
     count = 0
     try:
-        conn = sqlite3.connect(str(db_path))
+        # Open read-only: the catalog is immutable at query time, so a buggy
+        # handler can never mutate it. uri=True enables the file: query string.
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True, check_same_thread=False)
         conn.row_factory = sqlite3.Row
 
         if qid is not None:

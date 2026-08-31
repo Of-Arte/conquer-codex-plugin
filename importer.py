@@ -1,9 +1,9 @@
-"""Local client-data catalog importer for the conquerMarket plugin.
+"""Local client-data catalog importer for the conquerCodex plugin.
 
 Reads the three raw reference JSON files (itemtype.json, monster.json,
-magictype.json) from the plugin's ``plugin-data/conquerMarket/source/``
+magictype.json) from the plugin's ``plugin-data/conquerCodex/source/``
 directory and materializes them into a read-only SQLite database under
-``plugin-data/conquerMarket/catalog/``.
+``plugin-data/conquerCodex/catalog/``.
 
 Design goals
 ------------
@@ -31,16 +31,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 # Importer identity ----------------------------------------------------------
-IMPORTER_VERSION = "conquerMarket-importer-v1"
+IMPORTER_VERSION = "conquerCodex-importer-v1"
 
-# Resolved relative to this file: plugins/conquerMarket/importer.py
-# parent = plugins/conquerMarket
+# Resolved relative to this file: plugins/conquerCodex/importer.py
+# parent = plugins/conquerCodex
 # parent.parent = profiles/conquer
-# / plugin-data / conquerMarket
+# / plugin-data / conquerCodex
 _THIS_FILE = Path(__file__).resolve()
-_PLUGIN_ROOT = _THIS_FILE.parent                      # .../plugins/conquerMarket
+_PLUGIN_ROOT = _THIS_FILE.parent                      # .../plugins/conquerCodex
 _PROFILE_ROOT = _PLUGIN_ROOT.parent.parent           # .../profiles/conquer
-_DATA_ROOT = _PROFILE_ROOT / "plugin-data" / "conquerMarket"
+_DATA_ROOT = _PROFILE_ROOT / "plugin-data" / "conquerCodex"
 
 SOURCE_DIR = _DATA_ROOT / "source"
 CATALOG_DIR = _DATA_ROOT / "catalog"

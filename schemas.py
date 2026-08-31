@@ -1,4 +1,4 @@
-"""Schemas for the conquerMarket plugin tools.
+"""Schemas for the conquerCodex plugin tools.
 
 All schemas are plain dicts in Hermes' expected JSON-Schema shape.
 They are kept compact to minimize context bloat.

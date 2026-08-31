@@ -1,4 +1,4 @@
-# AGENTS.md — conquerMarket Plugin
+# AGENTS.md — conquerCodex Plugin
 
 > Guide for AI coding assistants and agents working on this Hermes plugin repo.
 
@@ -32,7 +32,7 @@ Four companion skills guide how these tools are used:
 - Bump the plugin version when introducing new tools or changing the plugin
   manifest, `__init__.py` registration, or importer schema.
 - Do NOT include version strings in README unless they describe the importer
-  format version (e.g. `conquerMarket-importer-v1`).
+  format version (e.g. `conquerCodex-importer-v1`).
 
 ## Commit template
 
@@ -76,7 +76,7 @@ Verified:
 2. Verify syntax: `python3 -c "import py_compile; py_compile.compile('tools.py', doraise=True)"`
 3. Verify plugin discovery: `hermes --profile conquer plugins list --plain --no-bundled`
 4. Verify each affected skill loads:
-   `hermes --profile conquer --skills conquerMarket:<skill> chat -q "test query"`
+   `hermes --profile conquer --skills conquerCodex:<skill> chat -q "test query"`
 5. Bump the **skill** version in its `SKILL.md` frontmatter when its doctrine or
    evidence classification changes (commit scope: `skills`)
 6. Bump the **plugin** version in `plugin.yaml` when tools, schemas, the
@@ -95,7 +95,7 @@ Verified:
 ## File layout
 
 ```
-~/.hermes/profiles/conquer/plugins/conquerMarket/
+~/.hermes/profiles/conquer/plugins/conquerCodex/
 ├── plugin.yaml           # manifest + plugin version
 ├── __init__.py           # register() entrypoint: tools + skills
 ├── schemas.py            # tool input schemas

@@ -1,4 +1,4 @@
-# conquerMarket
+# conquerCodex
 
 A Hermes plugin providing two read-only tools for Conquer Online Classic theorycrafting:
 
@@ -54,13 +54,13 @@ Errors return `ok: false` with an `error` object containing `type`, `message`, a
 This is a **local Hermes plugin** installed at:
 
 ```
-~/.hermes/plugins/conquerMarket/
+~/.hermes/plugins/conquerCodex/
 ```
 
 File layout:
 
 ```
-~/.hermes/plugins/conquerMarket/
+~/.hermes/plugins/conquerCodex/
 ├── plugin.yaml
 ├── __init__.py
 ├── schemas.py
@@ -82,30 +82,30 @@ After enabling, both tools appear under the `conquer_market` toolset
 
 - `conquerMarketSearch` — live market listing queries, price snapshots, and
   use of `conquer_market_search`. Accessible via
-  `skill_view(name='conquerMarket:conquerMarketSearch')`.
+  `skill_view(name='conquerCodex:conquerMarketSearch')`.
 - `conquerGameData` — local client-catalog entity lookup guidance using
   `conquer_game_data_search`. Accessible via
-  `skill_view(name='conquerMarket:conquerGameData')`.
+  `skill_view(name='conquerCodex:conquerGameData')`.
 - `conquerTheorycraft` — evidence-hierarchical theorycrafting that
   cross-references the local client catalog, live market data, and official
   sources. Accessible via
-  `skill_view(name='conquerMarket:conquerTheorycraft')`.
+  `skill_view(name='conquerCodex:conquerTheorycraft')`.
 
 ## How to enable and verify
 
 ```bash
 # Enable the plugin
-hermes plugins enable conquerMarket
+hermes plugins enable conquerCodex
 
 # Verify discovery
 hermes plugins list
-hermes plugins show conquerMarket
+hermes plugins show conquerCodex
 
 # Run the doctor
-hermes plugins doctor conquerMarket
+hermes plugins doctor conquerCodex
 ```
 
-After enabling, the tool appears as `conquer_market_search` under the `conquer_market` toolset. The companion skill is accessible via `skill_view(name='conquerMarket:conquerMarketSearch')`.
+After enabling, the tool appears as `conquer_market_search` under the `conquer_market` toolset. The companion skill is accessible via `skill_view(name='conquerCodex:conquerMarketSearch')`.
 
 ## Test prompts
 
@@ -133,14 +133,14 @@ This is a **profile-scoped Hermes plugin**. The Hermes convention resolves plugi
 
 ```
 ~/.hermes/profiles/conquer/
-├── plugins/conquerMarket/        # the plugin package (git-tracked)
+├── plugins/conquerCodex/        # the plugin package (git-tracked)
 │   ├── __init__.py
 │   ├── schemas.py
 │   ├── tools.py
 │   ├── importer.py                # one-time, stdlib-only SQLite importer
 │   ├── plugin.yaml
 │   └── skills/conquerMarketSearch/SKILL.md
-└── plugin-data/conquerMarket/    # runtime data (NOT git-tracked)
+└── plugin-data/conquerCodex/    # runtime data (NOT git-tracked)
     ├── source/                    # raw reference JSON (read-only, never modified by importer)
     │   ├── itemtype.json
     │   ├── monster.json
@@ -156,7 +156,7 @@ This is a **profile-scoped Hermes plugin**. The Hermes convention resolves plugi
 The catalog is built by running the importer (standard library only — `json`, `hashlib`, `sqlite3`):
 
 ```bash
-cd ~/.hermes/profiles/conquer/plugins/conquerMarket
+cd ~/.hermes/profiles/conquer/plugins/conquerCodex
 python3 importer.py            # build or verify
 python3 importer.py --force    # rebuild even if sources unchanged
 ```
@@ -194,7 +194,7 @@ Behaviour:
   "catalog_metadata": {
     "source_type": "local_client_catalog",
     "catalog_version": "...",
-    "importer_version": "conquerMarket-importer-v1",
+    "importer_version": "conquerCodex-importer-v1",
     "imported_at_utc": "2026-08-30T18:53:49Z",
     "record_counts": { "item": 11142, "monster": 374, "magic": 610 },
     "sources": {

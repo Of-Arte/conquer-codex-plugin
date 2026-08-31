@@ -223,7 +223,7 @@ Do not collapse those statements into one claim.
 
 ## Verification checklist (do not distribute to users)
 
-1. Confirm the skill loads (`skill_view(name='conquerMarket:conquerReduxReference')`).
+1. Confirm the skill loads (`skill_view(name='conquerCodex:conquerReduxReference')`).
 2. Run a no-write question involving the Redux fork; confirm the response
    labels the source as `reference_implementation`, applies exactly one
    compatibility label, and does not claim Redux behavior is proven

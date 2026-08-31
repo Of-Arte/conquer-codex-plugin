@@ -1,7 +1,7 @@
 ---
 name: conquerMarketSearch
 version: 0.2.0
-description: "Guidance for the read-only Conquer Online Classic market search tool (conquer_market_search). For multi-source theorycrafting across the local client catalog and live market, see conquerMarket:conquerTheorycraft."
+description: "Guidance for the read-only Conquer Online Classic market search tool (conquer_market_search). For multi-source theorycrafting across the local client catalog and live market, see conquerCodex:conquerTheorycraft."
 ---
 
 # Conquer Market Search
@@ -20,7 +20,7 @@ market API.
 
 For multi-source item / market comparisons that also consult the local
 client-data catalog (static item/monster/magic definitions), use the
-`conquerMarket:conquerTheorycraft` skill instead — it carries the explicit
+`conquerCodex:conquerTheorycraft` skill instead — it carries the explicit
 evidence hierarchy for cross-referencing the local catalog, live market data,
 and official sources.
 
@@ -81,6 +81,6 @@ Qualities: Elite, Fixed, Legendary, Normal, Refined, Super, Unique.
 
 When an item name or variant is ambiguous (e.g. "Boots" matches many IDs, or a
 name like "Thunder" could be a magic name or a weapon), first resolve it
-against the local client catalog using `conquerMarket:conquerGameData`, then
+against the local client catalog using `conquerCodex:conquerGameData`, then
 pass the exact identifier into the market query. For straightforward market
 filter questions without entity ambiguity, do not invoke catalog lookup.

@@ -1,4 +1,4 @@
-"""conquerMarket Hermes plugin.
+"""conquerCodex Hermes plugin.
 
 Registers two read-only tools under the ``conquer_market`` toolset:
 
@@ -7,14 +7,14 @@ Registers two read-only tools under the ``conquer_market`` toolset:
 * ``conquer_game_data_search`` — local, read-only SQLite lookup over the client
   reference files (itemtype.json, monster.json, magictype.json).
 
-Plus three companion skills accessible via ``conquerMarket:<skill>``:
+Plus three companion skills accessible via ``conquerCodex:<skill>``:
 
 * ``conquerMarketSearch`` — guidance for market listing queries and price snapshots.
 * ``conquerGameData`` — guidance for local client-catalog entity lookup.
 * ``conquerTheorycraft`` — evidence-hierarchical theorycrafting across sources.
 
 Hermes loads this plugin when enabled (via ``hermes plugins enable
-conquerMarket``). The plugin is intentionally minimal: two read-only tools
+conquerCodex``). The plugin is intentionally minimal: two read-only tools
 + three skills, no MCP, no extra dependencies.
 """
 
@@ -47,7 +47,7 @@ def register(ctx) -> None:
     )
 
     # Register the companion skills so they are resolvable via
-    # skill_view(name="conquerMarket:...") within the Conquer profile.
+    # skill_view(name="conquerCodex:...") within the Conquer profile.
     #
     # - conquerMarketSearch: live market listing queries, price snapshots.
     # - conquerTheorycraft:  multi-source item/market comparison with the

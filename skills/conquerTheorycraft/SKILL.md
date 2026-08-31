@@ -17,7 +17,7 @@ of live target-server mechanics.
 
 Use for cross-source gameplay, item, monster, magic, build, or market questions
 that require evidence weighting and a recommendation. For a single-filter live
-market availability or price query, use `conquerMarket:conquerMarketSearch`
+market availability or price query, use `conquerCodex:conquerMarketSearch`
 instead.
 
 ## Critical distinction: domains vs. evidence classification
@@ -91,7 +91,7 @@ item, monster, and magic IDs, variants, names, and client-visible fields.
 It supports entity resolution, not proof of live enablement, drop rates,
 hidden formulas, availability, or current mechanics.
 
-**Catalog handoff:** use `conquerMarket:conquerGameData` for the full
+**Catalog handoff:** use `conquerCodex:conquerGameData` for the full
 local-catalog procedure — name-first ambiguity resolution, exact ID lookup,
 variant handling, catalog metadata, and error reporting. Label results
 `local_client_catalog` and do not treat them as live-server proof.
@@ -148,7 +148,7 @@ comments. If relevant files are modified, say the result is from the local
 working tree. Without that provenance, omit the claim rather than relabeling it.
 
 For the detailed step-by-step procedure when inspecting Redux code, apply the
-`conquerMarket:conquerReduxReference` skill. It carries the read-only repository
+`conquerCodex:conquerReduxReference` skill. It carries the read-only repository
 policy, provenance-recording checklist, and the exact compatibility-label set
 used when a Redux finding enters a theorycraft conclusion.
 
@@ -166,7 +166,7 @@ searches and conclusions.
 ## Compact cross-source workflow
 
 1. **Resolve entities.** If terminology, IDs, qualities, or variants are
-   ambiguous, use `conquerMarket:conquerGameData` first. Completion: resolved
+   ambiguous, use `conquerCodex:conquerGameData` first. Completion: resolved
    records or a clearly labeled `local_client_catalog` failure.
 2. **Establish target-server facts.** When mechanics, rules, enabled content,
    or current status matter, fetch relevant evidence from verified target-server
@@ -183,7 +183,7 @@ searches and conclusions.
    approved source, or directly linked by a verified target-server page; classify
    staff and player content separately. When a `reference_implementation`
    question requires repository inspection, delegate to
-   `conquerMarket:conquerReduxReference` for the provenance and read-only policy.
+   `conquerCodex:conquerReduxReference` for the provenance and read-only policy.
 5. **Synthesize before recommending.** Separate verified facts, assumptions,
    and working theory. Completion: a direct recommendation that identifies the
    evidence label supporting it and the uncertainty that could change it.
@@ -228,8 +228,8 @@ Qualities: Elite, Fixed, Legendary, Normal, Refined, Super, Unique.
 
 ## Verification checklist (do not distribute to users)
 
-1. Confirm `conquerMarket:conquerTheorycraft`, `conquerMarket:conquerGameData`,
-   `conquerMarket:conquerMarketSearch`, and `conquerMarket:conquerReduxReference`
+1. Confirm `conquerCodex:conquerTheorycraft`, `conquerCodex:conquerGameData`,
+   `conquerCodex:conquerMarketSearch`, and `conquerCodex:conquerReduxReference`
    all load (`skill_view(name='...')`).
 2. Run a no-write question involving a known local entity and a live market
    lookup when current market data is relevant.

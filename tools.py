@@ -1,4 +1,4 @@
-"""conquerMarket plugin tool handlers.
+"""conquerCodex plugin tool handlers.
 
 Read-only Conquer Online Classic market lookup via the public API.
 No authentication, no state-changing requests, no browser automation.

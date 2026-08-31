@@ -147,6 +147,11 @@ commit, and working-tree state; audit the actual code path rather than names or
 comments. If relevant files are modified, say the result is from the local
 working tree. Without that provenance, omit the claim rather than relabeling it.
 
+For the detailed step-by-step procedure when inspecting Redux code, apply the
+`conquerMarket:conquerReduxReference` skill. It carries the read-only repository
+policy, provenance-recording checklist, and the exact compatibility-label set
+used when a Redux finding enters a theorycraft conclusion.
+
 Redux is not target-server evidence and does not prove Classic Conquer shares
 its implementation. A client catalog record cannot corroborate a
 Redux-derived server formula. Treat conclusions as working theory unless
@@ -176,7 +181,9 @@ searches and conclusions.
    and reference implementations only with their taxonomy labels and stated
    constraints. Discord must be user-provided, publicly accessible through an
    approved source, or directly linked by a verified target-server page; classify
-   staff and player content separately.
+   staff and player content separately. When a `reference_implementation`
+   question requires repository inspection, delegate to
+   `conquerMarket:conquerReduxReference` for the provenance and read-only policy.
 5. **Synthesize before recommending.** Separate verified facts, assumptions,
    and working theory. Completion: a direct recommendation that identifies the
    evidence label supporting it and the uncertainty that could change it.
@@ -221,10 +228,15 @@ Qualities: Elite, Fixed, Legendary, Normal, Refined, Super, Unique.
 
 ## Verification checklist (do not distribute to users)
 
-1. Confirm the skill loads (`skill_view(name='conquerMarket:conquerTheorycraft')`).
+1. Confirm `conquerMarket:conquerTheorycraft`, `conquerMarket:conquerGameData`,
+   `conquerMarket:conquerMarketSearch`, and `conquerMarket:conquerReduxReference`
+   all load (`skill_view(name='...')`).
 2. Run a no-write question involving a known local entity and a live market
    lookup when current market data is relevant.
 3. Confirm labels distinguish `local_client_catalog`, `target_server_market`,
    and `target_server_official`, and that no excluded or inappropriate modern
    retail source was used.
-4. Do not write persistent memory from the test.
+4. Confirm Redux-derived findings are routed through `conquerReduxReference`
+   with `reference_implementation` labeling, provenance recording, and a
+   compatibility label.
+5. Do not write persistent memory from the test.

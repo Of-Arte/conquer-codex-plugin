@@ -67,6 +67,10 @@ def register(ctx) -> None:
             "conquerGameData",
             "Local Classic Conquer client-catalog entity lookup guidance.",
         ),
+        (
+            "conquerReduxReference",
+            "Read-only reference-implementation investigation guidance for the local Redux fork, with mandatory source classification, compatibility labels, and provenance recording.",
+        ),
     ):
         skill_md = (
             Path(__file__).resolve().parent / "skills" / skill_name / "SKILL.md"

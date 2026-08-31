@@ -11,18 +11,26 @@ Conquer Online Classic theorycrafting:
 - `conquer_game_data_search` — local, version-pinned client reference data in a
   read-only SQLite catalog
 
-Three companion skills guide how these tools are used:
+Four companion skills guide how these tools are used:
 
 - `conquerGameData` — local client-catalog entity lookup (conquer_game_data_search)
 - `conquerMarketSearch` — live market listing queries and price snapshots
 - `conquerTheorycraft` — evidence-hierarchical theorycrafting across sources
+- `conquerReduxReference` — read-only reference-implementation investigation of
+  the local Redux fork, with mandatory source classification and compatibility
+  labels
 
 ## Version tracking
 
-- Version lives in `plugin.yaml` (`version:` field).
-- The current version is **0.3.0**.
-- Bump the minor or patch version in `plugin.yaml` whenever functionality,
-  behavior, or documentation changes warrant it.
+- The **plugin** version lives in `plugin.yaml` (`version:` field) and tracks
+  tool, schema, and importer changes. The current plugin version is **0.3.0**.
+- Each **skill** carries its own version in the YAML frontmatter of its
+  `SKILL.md` (`version:` field). Bump a skill's version when its doctrine,
+  evidence hierarchy, compatibility labels, or response format change.
+- Skill versions evolve independently of the plugin version. It is normal for a
+  skill version to be ahead of or behind the plugin version.
+- Bump the plugin version when introducing new tools or changing the plugin
+  manifest, `__init__.py` registration, or importer schema.
 - Do NOT include version strings in README unless they describe the importer
   format version (e.g. `conquerMarket-importer-v1`).
 
@@ -47,8 +55,8 @@ Verified:
 
 ### Scope conventions
 
-- `v0.3.0` or `v<next>` — version-bearing release commits
-- `skills` — skill boundary / SKILL.md changes
+- `v0.3.0` or `v<next>` — plugin version-bearing release commits
+- `skills` — skill boundary / SKILL.md changes (including per-skill version bumps)
 - `plugin` — __init__.py, plugin.yaml, registration changes
 - `tools` — tool implementation (tools.py, schemas.py)
 - `importer` — importer.py, catalog build changes
@@ -67,10 +75,15 @@ Verified:
 1. Make changes
 2. Verify syntax: `python3 -c "import py_compile; py_compile.compile('tools.py', doraise=True)"`
 3. Verify plugin discovery: `hermes --profile conquer plugins list --plain --no-bundled`
-4. Verify skill loads: `hermes --profile conquer --skills conquerMarket:<skill> chat -q "test query"`
-5. Bump `plugin.yaml` version if warranted
-6. Stage and commit using the template above
-7. Push: `git push`
+4. Verify each affected skill loads:
+   `hermes --profile conquer --skills conquerMarket:<skill> chat -q "test query"`
+5. Bump the **skill** version in its `SKILL.md` frontmatter when its doctrine or
+   evidence classification changes (commit scope: `skills`)
+6. Bump the **plugin** version in `plugin.yaml` when tools, schemas, the
+   manifest, or `__init__.py` registration changes (commit scope: `plugin`,
+   `tools`, or `importer`)
+7. Stage and commit using the template above
+8. Push: `git push`
 
 ## Testing requirements
 
@@ -83,7 +96,7 @@ Verified:
 
 ```
 ~/.hermes/profiles/conquer/plugins/conquerMarket/
-├── plugin.yaml           # manifest + version
+├── plugin.yaml           # manifest + plugin version
 ├── __init__.py           # register() entrypoint: tools + skills
 ├── schemas.py            # tool input schemas
 ├── tools.py              # tool handlers
@@ -92,7 +105,8 @@ Verified:
 ├── AGENTS.md             # this file
 ├── .gitignore
 └── skills/
-    ├── conquerMarketSearch/SKILL.md
     ├── conquerGameData/SKILL.md
+    ├── conquerMarketSearch/SKILL.md
+    ├── conquerReduxReference/SKILL.md
     └── conquerTheorycraft/SKILL.md
 ```

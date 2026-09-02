@@ -34,13 +34,11 @@ from pathlib import Path
 IMPORTER_VERSION = "conquerCodex-importer-v1"
 
 # Resolved relative to this file: plugins/conquerCodex/importer.py
-# parent = plugins/conquerCodex
-# parent.parent = profiles/conquer
-# / plugin-data / conquerCodex
+# Plugin-local data directory: plugins/conquerCodex/data/
+# This makes the plugin self-contained and profile-independent.
 _THIS_FILE = Path(__file__).resolve()
-_PLUGIN_ROOT = _THIS_FILE.parent                      # .../plugins/conquerCodex
-_PROFILE_ROOT = _PLUGIN_ROOT.parent.parent           # .../profiles/conquer
-_DATA_ROOT = _PROFILE_ROOT / "plugin-data" / "conquerCodex"
+_PLUGIN_ROOT = _THIS_FILE.parent                       # .../plugins/conquerCodex
+_DATA_ROOT = _PLUGIN_ROOT / "data"
 
 SOURCE_DIR = _DATA_ROOT / "source"
 CATALOG_DIR = _DATA_ROOT / "catalog"

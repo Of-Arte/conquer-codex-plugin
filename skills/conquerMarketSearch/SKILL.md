@@ -1,6 +1,6 @@
 ---
 name: conquerMarketSearch
-version: 0.2.0
+version: 0.3.0
 description: "Guidance for the read-only Conquer Online Classic market search tool (conquer_market_search). For multi-source theorycrafting across the local client catalog and live market, see conquerCodex:conquerTheorycraft."
 ---
 
@@ -63,10 +63,24 @@ and official sources.
 
 ## Known values
 
-Categories: Armor, Boots, Gem, Headgear, Necklace Bag, Others, Ring Bracelet,
-Valuables, Weapon.
+Categories: Armor, Boots, Gem, Headgear, Necklace Bag, Others, Ring Bracelet, Valuables, Weapon.
 
 Qualities: Elite, Fixed, Legendary, Normal, Refined, Super, Unique.
+
+## Market API gotchas
+
+- `category` must be the **parent bucket** (e.g. `Weapon`), NOT a weapon type.
+  Values like `Bow`, `Sword`, `Club` are rejected with:
+  `"Unknown category 'X'. Known: Armor, Boots, Gem, Headgear, Necklace Bag,
+  Others, Ring Bracelet, Valuables, Weapon"`. Pass the type as `subcategory`
+  instead (`subcategory: 'Bow'` under `category: 'Weapon'`).
+- Each market listing returns an `additionLevel` integer (the plus value of
+  that specific listing instance) and an `itemId` (the live instance ID, not
+  the itemtype ID). Use these to reason about plus-equipped listings.
+- `attributeId` on each listing maps back to a specific itemtype ID; use it
+  with `conquer_game_data_search` for exact catalog resolution.
+- The market endpoint requires the exact category strings listed above; mixed
+  casing is accepted but spelled-out values matter.
 
 ## Example user requests
 

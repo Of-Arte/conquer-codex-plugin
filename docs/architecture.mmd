@@ -1,0 +1,75 @@
+%% Architecture: conquerCodex Plugin (standalone, profile-independent)
+%% This diagram shows the data flow and module seams.
+
+flowchart TD
+    subgraph U["User Layer"]
+        USER["Player / Agent"]
+    end
+
+    subgraph H["Hermes Runtime"]
+        PRC["Hermes PluginManager<br/>discovers ~/.hermes/plugins/conquerCodex/"]
+        TR["Hermes Tool Runtime<br/>tool_call() dispatch"]
+        SK["skill_view()<br/>skill dispatch"]
+    end
+
+    subgraph PS["Plugin Seam - Interface"]
+        INIT["__init__.py<br/>register(ctx)"]
+        REG_TOOL["ctx.register_tool()"]
+        REG_SKILL["ctx.register_skill()"]
+    end
+
+    subgraph PI["Plugin Implementation - Deep Modules"]
+        MT["tools.py<br/>conquer_market_search()"]
+        GDT["tools.py<br/>conquer_game_data_search()"]
+        SCH["schemas.py<br/>CONQUER_MARKET_SEARCH<br/>CONQUER_GAME_DATA_SEARCH"]
+        IMP["importer.py<br/>import_catalog()<br/>db_path()<br/>latest_manifest()"]
+    end
+
+    subgraph E["External"]
+        API["api.conqueronline.net<br/>market/items (read-only)"]
+        CJ["Client JSON files<br/>itemtype.json<br/>monster.json<br/>magictype.json"]
+    end
+
+    subgraph D["Plugin-Local Data"]
+        SRC["data/source/"]
+        CAT["data/catalog/"]
+        MAN["data/manifests/"]
+        DB[("SQLite Catalog<br/>conquer_client_catalog.sqlite3")]
+    end
+
+    USER -->|chat| PRC
+    PRC --> INIT
+    INIT -->|registers| REG_TOOL
+    INIT -->|registers| REG_SKILL
+
+    USER -->|tool_call| TR
+    TR --> MT
+    TR --> GDT
+
+    MT -->|HTTP GET| API
+    GDT -->|read-only| DB
+    IMP -->|reads| CJ
+    IMP -->|writes| DB
+
+    CJ -->|user copies| SRC
+    SRC -->|"python3 importer.py"| IMP
+    IMP -->|builds| DB
+    DB -.->|stored in| CAT
+    IMP -->|writes| MAN
+
+    SCH <--> MT
+    SCH <--> GDT
+
+    SK -->|"conquerCodex:conquerMarketSearch"| MT
+    SK -->|"conquerCodex:conquerGameData"| GDT
+    SK -->|"conquerCodex:conquerTheorycraft"| MT
+
+    classDef plugin fill:#2a2a3a,stroke:#4a90d9,stroke-width:2px,color:#fff
+    classDef data fill:#1a1a2e,stroke:#e94560,stroke-width:2px,color:#fff
+    classDef external fill:#3a3a3a,stroke:#56b4e9,stroke-width:2px,color:#fff
+    classDef hermes fill:#4a3a5e,stroke:#d4af37,stroke-width:2px,color:#fff
+
+    class INIT,MT,GDT,SCH,IMP,REG_TOOL,REG_SKILL plugin
+    class SRC,CAT,MAN,DB data
+    class API,CJ external
+    class PRC,TR,SK,USER hermes

@@ -1,6 +1,6 @@
 ---
 name: conquerTheorycraft
-version: 0.5.0
+version: 0.6.0
 description: "Evidence-synthesis theorycrafting for Classic Conquer Online."
 ---
 
@@ -187,6 +187,50 @@ searches and conclusions.
 5. **Synthesize before recommending.** Separate verified facts, assumptions,
    and working theory. Completion: a direct recommendation that identifies the
    evidence label supporting it and the uncertainty that could change it.
+
+## Tool invocation
+
+Plugin tools discovered via `tool_search` (`conquer_game_data_search`,
+`conquer_market_search`, etc.) are **deferred tools** — they appear in the
+search catalog but cannot be invoked by direct name. Route every call through
+`tool_call(name='conquer_game_data_search', arguments={...})` (or the
+equivalent). Direct invocation returns "does not exist". This is a Hermes
+runtime mechanic, not Conquer-specific.
+
+## Workflow: numeric damage and gear comparisons
+
+When the user asks "X vs Y which is better" for weapons, mounts, or gear:
+
+- **Anchor on user-provided numbers when supplied.** If the user gives an
+  in-game stat (e.g. "my club shows 640–1916"), treat that as the live
+  effective value and compare directly against catalog bases, unless the
+  user is explicitly asking you to derive the effective value from base +
+  modifiers.
+- **Pull catalog bases for both items before answering.** If the user only
+  gave one number, get the other from `conquer_game_data_search` before
+  saying "can't compare."
+- **Use the user's stated server-side multipliers verbatim.** When the user
+  states a gem/plus/quality multiplier value (e.g. "2 RefinedDragonGems =
+  +20% damage"), use that number directly. Do not relitigate it against
+  catalog fields unless the catalog contradicts it.
+- **Present a side-by-side table** when comparing two items. Min, max, and
+  any modifier contribution (plus, gems, ph_damage) in one block.
+- **For dual-wield comparisons** (e.g. two clubs summed together), sum the
+  bases first, then apply the multiplier to the combined total, not per
+  weapon.
+
+Anti-pattern: catalog the bases, refuse to do the math because the
+plus/quality/gem formulas aren't in the catalog, and ask the user to compute
+it themselves. The user expects the math, not the disclaimer.
+
+## Server-crafting systems (Magic Artisan / Weapon Master / Artisan Ou)
+
+When a question involves upgrading item level, quality, or sockets via the
+in-game crafting NPCs, see `references/crafting-systems.md` for the verified
+mechanic tables (NPC roles, success rates, costs, item thresholds, socket
+chances). These mechanics are confirmed from official Classic Conquer wiki
+sources and inform the order-of-operations recommendation for upgrade paths
+(quality-first vs level-first vs socket-first).
 
 ## Response format
 
